@@ -1,4 +1,4 @@
-## Comand line code of analysis workflow
+## Comand line code of variant calling workflow
 ## To be run blockwise in the command line.
 ## Make sure to change the extensions depending on the file you want to filter.
 
