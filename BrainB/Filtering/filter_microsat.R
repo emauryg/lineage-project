@@ -1,21 +1,79 @@
 # Code to remove the Microsatellite regions
 
-# chrom =data[2]
-# pos1=data[3]
-# pos2= data[4]
 
-get_microsat_record <- function(line){
-     data=strsplit(line, split="\t")[[1]]
-     chrom=gsub("chr","",data[2])
-     pos1=data[3]
-     pos2=data[4]
-     record = c(chrom, pos1, pos2)
+get_microsat_record <- function(lines, mat){
+     for (i in 2:length(lines)){
+          data=strsplit(lines[i], split="\t")[[1]]
+          chrom=gsub("chr","",data[2])
+          pos1=as.numeric(data[3])
+          pos2=as.numeric(data[4])
+          record=c(chrom, pos1, pos2)
+          mat  <- rbind(mat, record)
+
+
+     }
+     return(mat)
 }
 
-create_microsat_table <- function(lines){
-     records <- sapply(lines[2:length(lines)], USE.NAMES=FALSE, function(x) get_microsat_record(x))
+get_single_cell_records <- function(lines, mat){
+     for (line in lines){
+          if (!grepl('#', line)){
+               data=strsplit(line, split="\t")[[1]]
+               chrom=data[1]
+               pos=as.numeric(data[2])
+               record=c(chrom, pos)
+               mat <- rbind(mat,record)
+
+          }
+     }
+     return(mat)
+
 }
+
+get_overlap_position <- function(single_cell, microsat, output_record){
+     # get the records of the single cell and check if there are interval overlaps
+     for (i in 1:nrow(single_cell)){
+          pos <- as.numeric(single_cell[i,2])
+          chrom <- single_cell[i,1]
+          micro <- microsat[which(microsat[,1]==chrom), ]
+          for (j in 1:nrow(micro)){
+               int1 <- as.numeric(micro[i,2])
+               int2 <- as.numeric(micro[i,3])
+               if (pos < int1 | pos > int2){
+                    record = paste(chrom, pos, sep="\t")
+                    if (!is.element(record, output_record)){
+                         output_record = rbind(output_record, record)
+                    }
+               }
+          }
+     }
+     return(output_record)
+}
+
+
 
 microsat_file <- file("/n/scratch2/eam63/merging_cells_project/merging/gvcf_files/filtering_dbs/microsat_masker.txt.gz", open='r')
 lines=readLines(microsat_file)
-micro_records <- create_microsat_table(lines)
+close(microsat_file)
+mat <- matrix(0,0,3)
+microsat <- get_microsat_record(lines, mat)
+
+args <- commandArgs(trailingOnly=TRUE)
+file_name=args[1]
+extension=args[2]
+out_file_extension=args[3]
+
+vcf_file <- file(paste(file_name, extension,sep=""), open='r')
+lines2=readLines(vcf_file)
+close(vcf_file)
+
+mat <- matrix(0,0,2)
+single_cell <- get_single_cell_records(lines2, mat)
+
+output_record <- c()
+filtered_positions <- get_overlap_position(single_cell, microsat, output_record)
+
+write.table(filtered_positions,file=paste(file_name,out_file_extension,sep=""), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+
+
+
