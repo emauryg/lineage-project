@@ -1,0 +1,33 @@
+## Data description and relevant locations
+
+# directory as of feb 8th, 2017
+/n/data1/bch/genetics/walsh-park/data/Linkage/data_feb_8_2017
+
+# link for sample description:  google docs: https://docs.google.com/spreadsheets/d/1B96V0a0lNTi0hOpN__RboIfVkzI6ujeQS87z652-5UtY/edit#gid=0
+1465_1024-pfc-bulk.HC_G.g.vcf.gz
+
+
+/n/data1/bch/genetics/walsh-park/data/CockayneXP/VariantCalls/GVCF/emitRefConfidence_GVCF/1465_1024-pfc-bulk.HC_G.g.vcf.gz
+
+#####################################################################################################
+#####################################################################################################
+#### NEURONS
+#####################################################################################################
+#####################################################################################################
+1465-cortex_1-neuron_MDA_12.HC_G.g.vcf.gz  #DONE #snv in progress
+1465-cortex_1-neuron_MDA_18.HC_G.g.vcf.gz #Running #snv
+1465-cortex_1-neuron_MDA_20.HC_G.g.vcf.gz #Running #snv
+1465-cortex_1-neuron_MDA_24.HC_G.g.vcf.gz  #Running
+1465-cortex_1-neuron_MDA_25.HC_G.g.vcf.gz  #Running
+1465-cortex_1-neuron_MDA_2_WGSb.HC_G.g.vcf.gz  #Running
+1465-cortex_1-neuron_MDA_30.HC_G.g.vcf.gz  #Running
+1465-cortex_1-neuron_MDA_39.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_3_WGSb.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_43.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_46.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_47.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_51_WGSb.HC_G.g.vcf.gz  #Running
+1465-cortex_1-neuron_MDA_5.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_6_WGSb.HC_G.g.vcf.gz #Running
+1465-cortex_1-neuron_MDA_8.HC_G.g.vcf.gz #Running
+
