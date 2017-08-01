@@ -30,24 +30,21 @@ get_single_cell_records <- function(lines, mat){
 
 }
 
-get_overlap_position <- function(single_cell, microsat, output_record){
+get_overlap_position <- function(single_cell, microsat, idx){
      # get the records of the single cell and check if there are interval overlaps
      for (i in 1:nrow(single_cell)){
           pos <- as.numeric(single_cell[i,2])
           chrom <- single_cell[i,1]
           micro <- microsat[which(microsat[,1]==chrom), ]
           for (j in 1:nrow(micro)){
-               int1 <- as.numeric(micro[i,2])
-               int2 <- as.numeric(micro[i,3])
-               if (pos < int1 | pos > int2){
-                    record = paste(chrom, pos, sep="\t")
-                    if (!is.element(record, output_record)){
-                         output_record = rbind(output_record, record)
-                    }
+               int1 <- as.numeric(micro[j,2])
+               int2 <- as.numeric(micro[j,3])
+               if (pos > int1 & pos < int2){
+                    idx = rbind(idx, i)
                }
           }
      }
-     return(output_record)
+     return(idx)
 }
 
 
@@ -63,6 +60,10 @@ file_name=args[1]
 extension=args[2]
 out_file_extension=args[3]
 
+# file_name="1465-cortex_1-neuron_MDA_5"
+# extension="_SingleCell_SNVs_1000G_microsat.vcf"
+
+
 vcf_file <- file(paste(file_name, extension,sep=""), open='r')
 lines2=readLines(vcf_file)
 close(vcf_file)
@@ -70,10 +71,15 @@ close(vcf_file)
 mat <- matrix(0,0,2)
 single_cell <- get_single_cell_records(lines2, mat)
 
-output_record <- c()
-filtered_positions <- get_overlap_position(single_cell, microsat, output_record)
+idx <- c()
+filtered_idx <- get_overlap_position(single_cell, microsat, idx)
 
-write.table(filtered_positions,file=paste(file_name,out_file_extension,sep=""), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
-
+if (length(filtered_idx) >0){
+     filtered_positions <- single_cell[-filtered_idx, ]
+     filtered_positions <- unique(filtered_positions)
+     write.table(filtered_positions,file=paste(file_name,out_file_extension,sep=""), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+} else{
+     write.table(single_cell,file=paste(file_name,out_file_extension,sep=""), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+}
 
 

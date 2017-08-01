@@ -75,3 +75,7 @@ for (i in 1:nrow(vcf_records)){
           filtered_segdups=rbind(filtered_segdups, paste(chrom, pos,sep="\t"))
      }
 }
+
+ write.table(filtered_segdups,file=paste(file_name,out_file_extension,sep=""), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+
+

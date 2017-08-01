@@ -16,4 +16,5 @@ out_file_extension=args[3]
 input_file <- file(paste(file_name,extension,sep=""),open='r')
 lines=readLines(input_file)
 records <- as.vector(unlist(sapply(lines,USE.NAMES=FALSE, function(x) get_records(x))))
+records <- unique(records)
 write.table(records,file=paste(file_name,out_file_extension,sep=""), sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
