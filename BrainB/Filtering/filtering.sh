@@ -68,7 +68,7 @@ out_file_extension="_microsatellites.txt"
 
 for f in "${files[@]}"
 do
-     sbatch -n 1 -p short -t 0-01:00:00 --mem=16G --wrap="Rscript filter_microsat.R ${f} ${extension} ${out_file_extension}"
+     sbatch -n 1 -p short -t 0-00:30:00 --mem=16G --wrap="Rscript filter_microsat.R ${f} ${extension} ${out_file_extension}"
 done
 
 extension="_SingleCell_SNVs_1000G"
@@ -95,6 +95,63 @@ do
      bcftools view -R ${f}_microsatellites.txt ${f}${extension}.vcf.gz -o ${f}${extension}_microsat.vcf
 done
 
+#############################################################################################################################
+# Filter out segmetnal duplication regions
+files=( "1465-cortex_1-neuron_MDA_3_WGSb" "1465-cortex_1-neuron_MDA_12" "1465-cortex_1-neuron_MDA_2_WGSb" "1465-cortex_1-neuron_MDA_24" "1465-cortex_1-neuron_MDA_6_WGSb" "1465-cortex_1-neuron_MDA_18" "1465-cortex_1-neuron_MDA_39" "1465-cortex_1-neuron_MDA_47" "1465-cortex_1-neuron_MDA_51_WGSb" "1465-cortex_1-neuron_MDA_20"  "1465-cortex_1-neuron_MDA_25" "1465-cortex_1-neuron_MDA_30" "1465-cortex_1-neuron_MDA_43" "1465-cortex_1-neuron_MDA_46" "1465-cortex_1-neuron_MDA_5" "1465-cortex_1-neuron_MDA_8" )
+extension="_SingleCell_SNVs_1000G_microsat.vcf"
+out_file_extension="_SegDups.txt"
+
+for f in "${files[@]}"
+do
+     sbatch -n 1 -p short -t 0-01:00:00 --mem=16G --wrap="Rscript filter_segdup.R ${f} ${extension} ${out_file_extension}"
+done
+
+extension="_SingleCell_SNVs_1000G_microsat"
+
+for f in "${files[@]}"
+do
+     vcf-sort -c ${f}${extension}.vcf > ${f}${extension}_sorted.vcf
+done
+
+for f in "${files[@]}"
+do
+      bgzip -c ${f}${extension}_sorted.vcf > ${f}${extension}.vcf.gz
+done
+
+
+for f in "${files[@]}"
+do
+      tabix -p vcf -f ${f}${extension}.vcf.gz
+done
+
+
+for f in "${files[@]}"
+do
+     bcftools view -R ${f}${out_file_extension}  -c all ${f}${extension}.vcf.gz -o ${f}${extension}_SegDup.vcf
+done
+
+#############################################################################################################################
+# Filter out duplicated records
+
+moulde load vcflib
+
+files=( "1465-cortex_1-neuron_MDA_3_WGSb" "1465-cortex_1-neuron_MDA_12" "1465-cortex_1-neuron_MDA_2_WGSb" "1465-cortex_1-neuron_MDA_24" "1465-cortex_1-neuron_MDA_6_WGSb" "1465-cortex_1-neuron_MDA_18" "1465-cortex_1-neuron_MDA_39" "1465-cortex_1-neuron_MDA_47" "1465-cortex_1-neuron_MDA_51_WGSb" "1465-cortex_1-neuron_MDA_20"  "1465-cortex_1-neuron_MDA_25" "1465-cortex_1-neuron_MDA_30" "1465-cortex_1-neuron_MDA_43" "1465-cortex_1-neuron_MDA_46" "1465-cortex_1-neuron_MDA_5" "1465-cortex_1-neuron_MDA_8" )
+extension="_SingleCell_SNVs_1000G_microsat_SegDup"
+
+for f in "${files[@]}"
+do
+  vcfuniq ${f}${extension}.vcf > ${f}${extension}_db.vcf
+done
+
+#############################################################################################################################
+# Remove Indels
+files=( "1465-cortex_1-neuron_MDA_3_WGSb" "1465-cortex_1-neuron_MDA_12" "1465-cortex_1-neuron_MDA_2_WGSb" "1465-cortex_1-neuron_MDA_24" "1465-cortex_1-neuron_MDA_6_WGSb" "1465-cortex_1-neuron_MDA_18" "1465-cortex_1-neuron_MDA_39" "1465-cortex_1-neuron_MDA_47" "1465-cortex_1-neuron_MDA_51_WGSb" "1465-cortex_1-neuron_MDA_20"  "1465-cortex_1-neuron_MDA_25" "1465-cortex_1-neuron_MDA_30" "1465-cortex_1-neuron_MDA_43" "1465-cortex_1-neuron_MDA_46" "1465-cortex_1-neuron_MDA_5" "1465-cortex_1-neuron_MDA_8" )
+extension="_SingleCell_SNVs_1000G_microsat_SegDup_db"
+
+for f in "${files[@]}"
+do
+  vcftools --vcf ${f}${extension}.vcf --remove-indels --out ${f}${extension}_noIndels.vcf
+done
 
 
 

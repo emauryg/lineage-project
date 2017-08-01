@@ -38,7 +38,7 @@ done
 chroms=( "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "X" "Y" )
 for i in "${chroms[@]}"
 do
-     sbatch -p medium -n 1 -t 2-0:00:00 --mem=16G -o ${i}.out  --wrap="Rscript phased_candidates.R ${i}"
+     sbatch -p medium -n 1 -t 2-0:00:00 --mem=16G -o ${i}.out  --wrap="Rscript phase_calling.R ${i}"
 done
 
 # Filter out the candidate variants from the gvcf file of bulk. Spread and gather.
@@ -82,7 +82,7 @@ do
 done
 
 ############################################################################################################################
-# Compare hets from each sinle neurons with the bulk homo refs
+# Compare hets from each single neurons with the bulk homo refs
 
 chroms=( "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "20" "21" "22" "X" "Y" )
 files=( "1465-cortex_1-neuron_MDA_3_WGSb" "1465-cortex_1-neuron_MDA_12" "1465-cortex_1-neuron_MDA_2_WGSb" "1465-cortex_1-neuron_MDA_24" "1465-cortex_1-neuron_MDA_6_WGSb" "1465-cortex_1-neuron_MDA_18" "1465-cortex_1-neuron_MDA_39" "1465-cortex_1-neuron_MDA_47" "1465-cortex_1-neuron_MDA_51_WGSb" "1465-cortex_1-neuron_MDA_20"  "1465-cortex_1-neuron_MDA_25" "1465-cortex_1-neuron_MDA_30" "1465-cortex_1-neuron_MDA_43" "1465-cortex_1-neuron_MDA_46" "1465-cortex_1-neuron_MDA_5" "1465-cortex_1-neuron_MDA_8" )
@@ -90,7 +90,7 @@ for f in "${files[@]}"
 do
      for chr in "${chroms[@]}"
      do
-          sbatch -p short -n 1 -t 0-6:00:00 --mem=16G  --wrap="Rscript phase_calling.R ${f} ${chr}"
+          sbatch -p short -n 1 -t 0-6:00:00 --mem=16G  --wrap="Rscript single_cell_candidates.R ${f} ${chr}"
      done
 done
 
