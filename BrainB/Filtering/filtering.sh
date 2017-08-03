@@ -56,7 +56,7 @@ done
 extension="_SingleCell_SNVs"
 for f in "${files[@]}"
 do
-     bcftools view -R ${f}_1000G_maf01.txt ${f}${extension}.vcf.gz -o ${f}${extension}_1000G.vcf
+     bcftools view -T ${f}_1000G_maf01.txt ${f}${extension}.vcf.gz -o ${f}${extension}_1000G.vcf
 done
 
 #############################################################################################################################
@@ -92,7 +92,7 @@ done
 
 for f in "${files[@]}"
 do
-     bcftools view -R ${f}_microsatellites.txt ${f}${extension}.vcf.gz -o ${f}${extension}_microsat.vcf
+     bcftools view -T ${f}_microsatellites.txt ${f}${extension}.vcf.gz -o ${f}${extension}_microsat.vcf
 done
 
 #############################################################################################################################
@@ -127,7 +127,7 @@ done
 
 for f in "${files[@]}"
 do
-     bcftools view -R ${f}${out_file_extension}  -c all ${f}${extension}.vcf.gz -o ${f}${extension}_SegDup.vcf
+     bcftools view -T ${f}${out_file_extension} ${f}${extension}.vcf.gz -o ${f}${extension}_SegDup.vcf
 done
 
 #############################################################################################################################
@@ -146,18 +146,73 @@ done
 #############################################################################################################################
 # Remove Indels
 files=( "1465-cortex_1-neuron_MDA_3_WGSb" "1465-cortex_1-neuron_MDA_12" "1465-cortex_1-neuron_MDA_2_WGSb" "1465-cortex_1-neuron_MDA_24" "1465-cortex_1-neuron_MDA_6_WGSb" "1465-cortex_1-neuron_MDA_18" "1465-cortex_1-neuron_MDA_39" "1465-cortex_1-neuron_MDA_47" "1465-cortex_1-neuron_MDA_51_WGSb" "1465-cortex_1-neuron_MDA_20"  "1465-cortex_1-neuron_MDA_25" "1465-cortex_1-neuron_MDA_30" "1465-cortex_1-neuron_MDA_43" "1465-cortex_1-neuron_MDA_46" "1465-cortex_1-neuron_MDA_5" "1465-cortex_1-neuron_MDA_8" )
+extension="_SingleCell_SNVs_1000G_microsat_SegDup_db.vcf"
+out_file_extension="_indels.txt"
+
+for f in "${files[@]}"
+do
+  Rscript filter_indels.R ${f} ${extension} ${out_file_extension}
+done
+
 extension="_SingleCell_SNVs_1000G_microsat_SegDup_db"
 
 for f in "${files[@]}"
 do
-  vcftools --vcf ${f}${extension}.vcf --remove-indels --out ${f}${extension}_noIndels.vcf
+     vcf-sort -c ${f}${extension}.vcf > ${f}${extension}_sorted.vcf
+done
+
+for f in "${files[@]}"
+do
+      bgzip -c ${f}${extension}_sorted.vcf > ${f}${extension}.vcf.gz
 done
 
 
+for f in "${files[@]}"
+do
+      tabix -p vcf -f ${f}${extension}.vcf.gz
+done
 
 
+for f in "${files[@]}"
+do
+     bcftools view -T ${f}${out_file_extension} ${f}${extension}.vcf.gz -o ${f}${extension}_noIndels.vcf
+done
+
+#############################################################################################################################
+# Remove AF < 30
+
+files=( "1465-cortex_1-neuron_MDA_3_WGSb" "1465-cortex_1-neuron_MDA_12" "1465-cortex_1-neuron_MDA_2_WGSb" "1465-cortex_1-neuron_MDA_24" "1465-cortex_1-neuron_MDA_6_WGSb" "1465-cortex_1-neuron_MDA_18" "1465-cortex_1-neuron_MDA_39" "1465-cortex_1-neuron_MDA_47" "1465-cortex_1-neuron_MDA_51_WGSb" "1465-cortex_1-neuron_MDA_20"  "1465-cortex_1-neuron_MDA_25" "1465-cortex_1-neuron_MDA_30" "1465-cortex_1-neuron_MDA_43" "1465-cortex_1-neuron_MDA_46" "1465-cortex_1-neuron_MDA_5" "1465-cortex_1-neuron_MDA_8" )
+extension="_SingleCell_SNVs_1000G_microsat_SegDup_db_noIndels.vcf"
+out_file_extension="_indels.txt"
+
+for f in "${files[@]}"
+do
+  Rscript filter_AF.R ${f} ${extension} ${out_file_extension}
+done
+
+extension="_SingleCell_SNVs_1000G_microsat_SegDup_db_noIndels"
+
+for f in "${files[@]}"
+do
+     vcf-sort -c ${f}${extension}.vcf > ${f}${extension}_sorted.vcf
+done
+
+for f in "${files[@]}"
+do
+      bgzip -c ${f}${extension}_sorted.vcf > ${f}${extension}.vcf.gz
+done
 
 
+for f in "${files[@]}"
+do
+      tabix -p vcf -f ${f}${extension}.vcf.gz
+done
+
+
+for f in "${files[@]}"
+do
+     bcftools view -T ${f}${out_file_extension} ${f}${extension}.vcf.gz -o ${f}${extension}_AF30.vcf
+done
 
 
 
