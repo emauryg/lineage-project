@@ -1,0 +1,28 @@
+# GVCF data from Brian B
+
+#### Name of all the files
+
+
+
+1465-cortex_1-neuron_MDA_12.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_18.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_20.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_24.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_25.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_2_WGSb.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_30.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_39.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_3_WGSb.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_43.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_46.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_47.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_51_WGSb.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_5.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_6_WGSb.HC_G.g.vcf.gz
+1465-cortex_1-neuron_MDA_8.HC_G.g.vcf.gz
+
+/n/data1/bch/genetics/walsh-park/data/NormalSingleCell/VariantCalls/GVCF/emitRefConfidence_GVCF/3.4/
+/n/data1/bch/genetics/walsh-park/data/CockayneXP/VariantCalls/GVCF/emitRefConfidence_GVCF/1465_1024-pfc-bulk.HC_G.g.vcf.gz
+
+### Copying to /n/scratch2/eam63/merging_cells_project/merging/double_calling/GATK_only
+
